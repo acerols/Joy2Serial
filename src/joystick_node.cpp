@@ -12,8 +12,8 @@ void JoystickSubscriber::joy_callback_(const sensor_msgs::msg::Joy::SharedPtr ms
     this->sd->LeftStick[0] = this->sd->LeftStick[1] = 0;
     this->sd->RightStick[0] = this->sd->RightStick[1] = 0;
     for(int i = 0; i < 2; i++){
-        this->sd->LeftStick[i] = msg->axes[i] * 127 + 128;
-        this->sd->RightStick[i] = msg->axes[i+3] * 127 + 128;
+        this->sd->LeftStick[i] = msg->axes[i] * 127 + 127;
+        this->sd->RightStick[i] = msg->axes[i+3] * 127 + 127;
     }
 
     for(int i = 0; i < 8; i++){

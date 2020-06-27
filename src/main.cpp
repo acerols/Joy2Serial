@@ -1,14 +1,14 @@
 #include <rclcpp/rclcpp.hpp>
 #include "joystick_node.hpp"
-#include <boost/asio.hpp>
-#include <chrono>
+#include "serial.hpp"
 #include "joydata.hpp"
 
+#include <chrono>
 #include <thread>
 #include <iostream>
-#include <boost/asio.hpp>
 
 #define SERIALPORT "/dev/ttyACM0"
+const int COM_SIZE = 12;
 
 const int BAUDRATE = 115200;
 
@@ -22,18 +22,18 @@ int main(int argc, char *argv[])
 
     auto node = std::make_shared<JoystickSubscriber>(&sd);
 
-    boost::asio::io_service io;
-    boost::asio::serial_port serial(io, SERIALPORT);
-    serial.set_option(boost::asio::serial_port_base::baud_rate(BAUDRATE));
-    
-    std::this_thread::sleep_for(std::chrono::seconds(5));
+    SerialInit(SERIALPORT, BAUDRATE);
+
+    std::this_thread::sleep_for(std::chrono::seconds(2));
 
     auto timer1 = node->create_wall_timer(
         100ms,
         [&](){
-            boost::asio::streambuf response;
-            boost::asio::read_until(serial, response, '\n');
-            uint8_t Serialdata[13] = {0};
+            uint8_t checksum = 0;
+            uint8_t rsize = 0;
+            uint8_t rdata[256] = {0};
+            uint8_t Serialdata[12] = {0};
+            int readAvailable = 0;
             Serialdata[0] = 0xff;
             Serialdata[1] = 0x10;
             Serialdata[2] = 0x08;
@@ -44,27 +44,36 @@ int main(int argc, char *argv[])
             Serialdata[7] = sd.LeftStick[0];
             Serialdata[8] = sd.RightStick[1];
             Serialdata[9] = sd.RightStick[0];
-            Serialdata[10] = 0;
-            uint8_t checksum;
+            Serialdata[10] = 0;   
             for(int ind = 0; ind < 8; ind++){
                 checksum = checksum ^ Serialdata[ind+3];
             }
             Serialdata[11] = checksum;
 
-            auto buffer = boost::asio::buffer(Serialdata);
-            boost::asio::write(serial, buffer);
+            writePort(Serialdata, COM_SIZE);
+
+            ioctl(serial_fd, FIONREAD, &readAvailable);
+            if(readAvailable > 0){
+                if(readAvailable > 256){
+                    rsize = readPort(rdata, 256);
+                    ioctl(serial_fd, FIONREAD, &readAvailable);
+                    readPort(NULL, readAvailable);
+                }
+                else{
+                    rsize = readPort(rdata, readAvailable);
+                }
+            }
 
             RCLCPP_INFO(node->get_logger(), "Button1 : %d, Button2: %d\nLeftX  : %d, LeftY  : %d\nRightX : %d, RightY : %d\nchecksum : %d\n RES : %s", 
             sd.Button1, sd.Button2,
             sd.LeftStick[0], sd.LeftStick[1],
             sd.RightStick[0], sd.RightStick[1],
             checksum,
-            boost::asio::buffer_cast<const char*>(response.data()));
-            
+            rdata);
         }
     );
     rclcpp::spin(node);
-
+    closePort();
     rclcpp::shutdown();
     return 0;
 }
