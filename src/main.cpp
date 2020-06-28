@@ -40,10 +40,10 @@ int main(int argc, char *argv[])
             Serialdata[3] = sd.Button1;
             Serialdata[4] = sd.Button2;
             Serialdata[5] = sd.CrossButton;
-            Serialdata[6] = sd.LeftStick[1];
-            Serialdata[7] = sd.LeftStick[0];
-            Serialdata[8] = sd.RightStick[1];
-            Serialdata[9] = sd.RightStick[0];
+            Serialdata[6] = sd.LeftStick[0];
+            Serialdata[7] = sd.LeftStick[1];
+            Serialdata[8] = sd.RightStick[0];
+            Serialdata[9] = sd.RightStick[1];
             Serialdata[10] = 0;   
             for(int ind = 0; ind < 8; ind++){
                 checksum = checksum ^ Serialdata[ind+3];
