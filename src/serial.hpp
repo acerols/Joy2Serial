@@ -28,8 +28,8 @@ double tx_time;
 
 bool SerialInit(const char *serialport, int baudrate)
 {
-    	// // https://mcommit.hatenadiary.com/entry/2017/07/09/210840
-	// // こちら参照コード
+    // https://mcommit.hatenadiary.com/entry/2017/07/09/210840
+	// こちら参照コード
 	
 	int error_flag = 0;
 	struct termios tio;    
@@ -104,33 +104,3 @@ int readPort(uint8_t *data, int size)
 {
     return read(serial_fd, data, size);
 }
-/*
-int main(int argc, char *argv[])
-{
-    uint8_t checksum = 0;
-    uint8_t rdata[256];
-    int rsize;
-    int avalales = 0;
-    SerialInit(SERIAL_PORT, 115200);
-    uint8_t data[13] = {0xff, 0x10, 0x08, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01};
-    for(int i  = 0; i < data[2]; i++){
-        checksum = checksum ^ data[i+3];
-    }
-    data[data[2] + 3] = checksum;
-    cout << (int)checksum << endl;
-    for(int i = 0; i < 20; i++){
-        writePort(data, 12);
-        this_thread::sleep_for(chrono::milliseconds(100));
-    }
-
-    ioctl(serial_fd, FIONREAD, &avalales);
-    if(avalales > 0){
-        rsize = readPort(rdata, avalales);
-        cout << rdata << endl;
-    }
-    cout << "end" << endl;
-
-
-    return 0;
-}
-*/

@@ -39,7 +39,7 @@ endif()
 
 add_executable(joy2serial
     src/joystick_node.cpp
-    src/main.cpp
+    src/joy2serial.cpp
 )
 
 target_link_libraries(joy2serial
