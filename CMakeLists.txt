@@ -54,9 +54,24 @@ ament_target_dependencies(joy2serial
     Threads
 )
 
+add_executable(tf2serial
+  src/joystick_node.cpp
+  src/tf2serial.cpp
+)
+
+ament_target_dependencies(tf2serial
+  rclcpp
+  sensor_msgs
+)
+
 install(TARGETS
     joy2serial
     DESTINATION lib/${PROJECT_NAME}
+)
+
+install(TARGETS
+  tf2serial
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 ament_package()

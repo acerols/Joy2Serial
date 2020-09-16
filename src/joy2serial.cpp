@@ -85,6 +85,8 @@ int main(int argc, char *argv[])
             uint8_t rdata[256] = {0};
             uint8_t Serialdata[12] = {0};
             int readAvailable = 0;
+            
+            
             Serialdata[0] = 0xff;
             Serialdata[1] = 0x10;
             Serialdata[2] = 0x08;
@@ -99,6 +101,8 @@ int main(int argc, char *argv[])
             for(int ind = 0; ind < 8; ind++){
                 checksum = checksum ^ Serialdata[ind+3];
             }
+            
+
             Serialdata[11] = checksum;
 
             writePort(Serialdata, COM_SIZE);
@@ -124,6 +128,7 @@ int main(int argc, char *argv[])
                     sd.RightStick[0], sd.RightStick[1],
                     checksum,
                     "Received");
+                RCLCPP_INFO(node->get_logger(), "USSL %d, USSR %d\n", unoData[0] * 3, unoData[1] * 3);
             }
             else{
                 RCLCPP_INFO(node->get_logger(), "Button1 : %d, Button2: %d\nLeftX  : %d, LeftY  : %d\nRightX : %d, RightY : %d\nchecksum : %d\n RES : %s", 
