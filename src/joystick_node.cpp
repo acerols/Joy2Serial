@@ -1,7 +1,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/joy.hpp>
 #include <chrono>
-#include "joystick_node.hpp"
+#include <joy2serial/joystick_node.hpp>
 
 void JoystickSubscriber::joy_callback_(const sensor_msgs::msg::Joy::SharedPtr msg)
 {

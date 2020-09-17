@@ -1,7 +1,7 @@
 #include <rclcpp/rclcpp.hpp>
-#include "joystick_node.hpp"
+#include <joy2serial/joystick_node.hpp>
 #include "serial.hpp"
-#include "joydata.hpp"
+#include <joy2serial/joydata.hpp>
 
 #include <chrono>
 #include <thread>
@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
             uint8_t Serialdata[12] = {0};
             int readAvailable = 0;
             
-            
+
             Serialdata[0] = 0xff;
             Serialdata[1] = 0x10;
             Serialdata[2] = 0x08;

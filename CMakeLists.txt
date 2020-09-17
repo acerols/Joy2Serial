@@ -22,20 +22,9 @@ find_package(sensor_msgs REQUIRED)
 find_package(Boost REQUIRED)
 find_package(Threads REQUIRED)
 
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(agent_msgs REQUIRED)
+find_package(okarobo_msgs REQUIRED)
 
-if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  # the following line skips the linter which checks for copyrights
-  # uncomment the line when a copyright and license is not present in all source files
-  #set(ament_cmake_copyright_FOUND TRUE)
-  # the following line skips cpplint (only works in a git repo)
-  # uncomment the line when this package is not in a git repo
-  #set(ament_cmake_cpplint_FOUND TRUE)
-  ament_lint_auto_find_test_dependencies()
-endif()
 
 add_executable(joy2serial
     src/joystick_node.cpp
@@ -54,14 +43,29 @@ ament_target_dependencies(joy2serial
     Threads
 )
 
-add_executable(tf2serial
-  src/joystick_node.cpp
-  src/tf2serial.cpp
+target_include_directories(joy2serial
+  PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
 )
 
-ament_target_dependencies(tf2serial
+add_executable(robo2ros
+  src/robo2ros/robo_sub_pub_node.cpp
+  src/robo2ros/robo_sub_pub.cpp
+  src/serial.cpp
+)
+
+ament_target_dependencies(robo2ros
   rclcpp
   sensor_msgs
+  agent_msgs
+  okarobo_msgs
+)
+
+target_include_directories(robo2ros
+  PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
 )
 
 install(TARGETS
@@ -70,7 +74,7 @@ install(TARGETS
 )
 
 install(TARGETS
-  tf2serial
+  robo2ros
   DESTINATION lib/${PROJECT_NAME}
 )
 

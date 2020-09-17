@@ -1,6 +1,6 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/joy.hpp>
-#include "joydata.hpp"
+#include <joy2serial/joydata.hpp>
 
 class JoystickSubscriber : public rclcpp::Node{
 private:
