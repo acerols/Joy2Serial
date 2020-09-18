@@ -19,8 +19,11 @@ private:
     rclcpp::TimerBase::SharedPtr pub_timer_;
     rclcpp::TimerBase::SharedPtr serial_timer_;
     void short2byte(int16_t src, uint8_t *dst);
-
-    Serial *arduino;
+    int _robo_recieve();
+    void _robo_transmit();
+    bool read_check(uint8_t data[], int32_t len);
+    uint8_t byte2short(uint8_t *src, uint16_t &dst);
+    
     //send to Robo data
     int16_t velocity;
     int16_t omega;
@@ -41,7 +44,7 @@ public:
         const std::string& name_space="",
         const rclcpp::NodeOptions& options = rclcpp::NodeOptions()
     );
-
+    Serial *arduino;
 };
 }
 

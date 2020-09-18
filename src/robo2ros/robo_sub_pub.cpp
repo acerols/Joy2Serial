@@ -66,8 +66,14 @@ int recdatacheck(uint8_t *rdata, uint8_t rsize)
 
 int main(int argc, char *argv[])
 {
+    
     rclcpp::init(argc, argv);
-    rclcpp::spin(std::make_shared<RoboSubPub>());
+    auto node = std::make_shared<RoboSubPub>();
+    if(!node->arduino->isConnected()){
+        return 0;
+    }
+    std::cout << node->arduino->isConnected();
+    rclcpp::spin(node);
     rclcpp::shutdown();
     return 0;
 }
