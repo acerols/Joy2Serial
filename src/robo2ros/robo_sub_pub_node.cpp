@@ -23,7 +23,11 @@ RoboSubPub::RoboSubPub(
 
     RCLCPP_INFO(this->get_logger(), "Serial is %d", out);
 
+<<<<<<< HEAD
     agentorder_sub_ = this->create_subscription<agent_msgs::msg::Agent>(
+=======
+    agentorder_sub_ = this->create_subscription<okarobo_msgs::msg::Sensor>(
+>>>>>>> 37340cdcd12351aab8ec007284cd598a9475ff04
         "agent",
         rclcpp::QoS(10),
         std::bind(&RoboSubPub::_agentorder_callback, this, std::placeholders::_1)
