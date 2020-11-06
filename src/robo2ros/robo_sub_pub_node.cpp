@@ -23,8 +23,8 @@ RoboSubPub::RoboSubPub(
 
     RCLCPP_INFO(this->get_logger(), "Serial is %d", out);
 
-    agentorder_sub_ = this->create_subscription<okarobo_msgs::msg::Sensor>(
-        "agnet",
+    agentorder_sub_ = this->create_subscription<agent_msgs::msg::Agent>(
+        "agent",
         rclcpp::QoS(10),
         std::bind(&RoboSubPub::_agentorder_callback, this, std::placeholders::_1)
     );
@@ -50,6 +50,8 @@ void RoboSubPub::_agentorder_callback(const agent_msgs::msg::Agent::SharedPtr Ag
     this->omega = Agent->omega;
     this->nowAngle = Agent->nowangle;
     this->targetAngle = Agent->targetangle;
+    RCLCPP_INFO(this->get_logger(), "velocity %d, omega %d", this->velocity, this->omega);
+    RCLCPP_INFO(this->get_logger(), "nowAngle %d, targetAngle %d", this->nowAngle, this->targetAngle);
 }
 
 void RoboSubPub::_sensor_callback()
@@ -85,7 +87,8 @@ void RoboSubPub::_serial_callback()
         checksum ^= transmit[index+3];
     }
     transmit[11] = checksum;
-    //RCLCPP_INFO(this->get_logger(), "velocity %d", this->velocity);
+    //RCLCPP_INFO(this->get_logger(), "velocity %d omega %d", velocity, omega);
+    //RCLCPP_INFO(this->get_logger(), "velocity %d, omega %d", (int16_t)((transmit[4] << 8) | transmit[3]), (int16_t)((transmit[6] << 8) | transmit[5]));
     arduino->writeSerial(transmit, 12);
     /*
     using namespace std::chrono_literals;
